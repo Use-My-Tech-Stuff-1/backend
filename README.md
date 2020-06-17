@@ -11,13 +11,13 @@
 | password | string  | _required_                         |
 | username | string  | _required_                         |
 
-#### Tech Stuff
+#### Product
 
 | Field     | Type    | Notes                                                                      |
 | --------- | ------- | -----------------------------------------------------------------------    |
 | id        | integer | _primary key_ and _autoincrements_                                         |
 | name      | string  | _required_; name of the item                                               |
-| image_URL | string  | tech stuff image                                                           |
+| image_URL | string  | product image                                                              |
 | quote     | text    | price quote                                                                |
 | content   | text    | _required_; review of the tech stuff                                       |
 | author    | text    | author of the review                                                       |
