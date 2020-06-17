@@ -10,6 +10,22 @@
 | email    | string  | _required_ and _unique_            |
 | password | string  | _required_                         |
 | username | string  | _required_                         |
+| role     | string  | _required_                         |
+
+#### Owner
+
+| Field    | Type    | Notes                              |
+| -------- | ------- | ---------------------------------- |
+| id       | integer | _foreign key_ and _autoincrements_ |
+| user-id  | string  | _required_ and _unique_            |
+
+#### Renter
+
+| Field    | Type    | Notes                              |
+| -------- | ------- | ---------------------------------- |
+| id       | integer | _foreign key_ and _autoincrements_ |
+| user-id  | string  | _required_ and _unique_            |
+
 
 #### Product
 
