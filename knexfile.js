@@ -38,5 +38,23 @@ module.exports = {
     seeds: {
       directory:path.resolve("data", "seeds")
     },
-  }
+  },
+  production: {
+    client: "sqlite3",
+    useNullAsDefault: true,
+    connection: {
+      filename: "./data/techStuff.db3",
+    },
+    // pool: {
+    //   afterCreate: (conn, done) => {
+    //     conn.run("PRAGMA foreign_keys = ON", done);
+    //   },
+    // },
+    migrations: {
+      directory: path.resolve("data", "migrations")
+    },
+    seeds: {
+      directory:path.resolve("data", "seeds")
+    },
+  },
 };
