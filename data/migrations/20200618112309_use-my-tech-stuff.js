@@ -32,7 +32,7 @@ exports.up = function (knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
-      tbl.boolean("available");
+      tbl.boolean("available").defaultTo(true);
       tbl
         .integer("borrower")
         .unsigned()
