@@ -14,8 +14,8 @@ router.post("/register", (req, res) => {
 
     db("users")
       .insert(credentials)
-      .then((user) => {
-        res.status(201).json({ message: `Good job registering, ${credentials.username}`, data: user });
+      .then((users) => {
+        res.status(201).json({ message: `Good job registering, ${credentials.username}`, data: users });
       })
       .catch((err) => {
         res
@@ -36,11 +36,11 @@ router.post("/login", (req, res) => {
 
   if (isValid(req.body)) {
     db("users").where('username', username).first()
-      .then(user => {
+      .then(users => {
         // compare the password the hash stored in the database
-        if (user && bcryptjs.compareSync(password, user.password)) {
-          const token = generateToken(user);
-          res.status(200).json({ message: `Welcome to our API, ${user.username}`,
+        if (users && bcryptjs.compareSync(password, users.password)) {
+          const token = generateToken(users);
+          res.status(200).json({ message: `Welcome to our API, ${users.username}`,
           token
         });
         } else {
@@ -57,11 +57,11 @@ router.post("/login", (req, res) => {
   }
 });
 
-function generateToken(user) {
+function generateToken(users) {
   const payload = {
-    userID: user.id,
-    username: user.username,
-    email: user.email
+    userID: users.id,
+    username: users.username,
+    email: users.email
   }
   const options = {
     expiresIn: "4hr"
