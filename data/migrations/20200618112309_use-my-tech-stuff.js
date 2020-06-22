@@ -23,10 +23,10 @@ exports.up = function (knex) {
     // })
     .createTable("borrowers", (tbl) => {
       tbl.integer("borrower_id").references("users.id").onDelete("cascade")
-      tbl.integer("p_id").references("products.prod_id").onDelete("cascade")
+      tbl.integer("p_id")
     })
     .createTable("products", (tbl) => {
-      tbl.increments("prod_id");
+      tbl.increments("prod_id").references("borrowers.p_id").onDelete("cascade");
       tbl.string("name", 256).notNullable();
       tbl.string("image_URL", 256).notNullable();
       tbl.text("price").notNullable();
