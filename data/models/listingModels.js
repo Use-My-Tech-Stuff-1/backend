@@ -95,7 +95,7 @@ function getMyBorrowing(id) {
 }
 
 function addProduct(product) {
-  return db.insert(product, "id").into("products");
+  return db.insert(product).into("products");
 }
 
 function updateProduct(changes, id) {
