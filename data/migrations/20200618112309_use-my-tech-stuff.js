@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema
     .createTable("roles", (tbl) => {
-      tbl.increments();
+      tbl.increments("role_id");
       tbl.string("name", 128).notNullable().unique();
     })
     .createTable("users", (tbl) => {
@@ -12,7 +12,7 @@ exports.up = function (knex) {
       tbl
         .integer("role")
         .unsigned()
-        .references("roles.id")
+        .references("roles.role_id")
         .defaultTo(2)
         .onDelete("restrict")
         .onUpdate("cascade");
