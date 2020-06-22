@@ -51,10 +51,10 @@ module.exports = {
     //   },
     // },
     migrations: {
-      directory: path.resolve("data", "migrations")
+      directory: "./data/migrations"
     },
     seeds: {
-      directory:path.resolve("data", "seeds")
+      directory: "./data/seeds"
     },
   },
 };
