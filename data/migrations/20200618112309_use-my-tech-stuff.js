@@ -52,7 +52,6 @@ exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists("products")
     .dropTableIfExists("borrowers")
-    .dropTableIfExists("owners")
     .dropTableIfExists("users")
     .dropTableIfExists("roles");
     
