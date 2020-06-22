@@ -17,7 +17,7 @@ router
       });
   })
 
-//CREATES NEW PRODUCT LISTING
+  //CREATES NEW PRODUCT LISTING
   .post((req, res) => {
     Products.addProduct(req.body)
       .then((prod) => {
@@ -46,7 +46,7 @@ router
       });
   })
 
-//DELETES PRODUCT BY ID
+  //DELETES PRODUCT BY ID
   .delete((req, res) => {
     const { id } = req.params;
     Products.deleteProduct(id)
@@ -58,26 +58,54 @@ router
           .status(500)
           .json({ message: `something went wrong, ${err}, ${err.message}` });
       });
-  });
+  })
 
-//GETS ALL PRODUCTS THAT AREN'T BORROWED -- not working somehow...
-// router.get("/available", (req, res) => {
-//   Products.getAllProducts()
-//     .then((resp) => {
-//         console.log("hiu")
-//     //   const avail = prods.filter((prod) => {
-//     //     return prod.available != 0;
-//     //   });
-//       res.status(200).json(resp);
-//     })
-//     .catch((err) => {
-//       res
-//         .status(500)
-//         .json({ message: `something went wrong, ${err}, ${err.message}` });
-//     });
-// });
+  //UPDATE METHOD FOR LISTERS TO UPDATE THEIR LISTINGS
+  .put(
+    /*insert restricted middleware here*/ (req, res) => {
+      const changes = req.body;
+      const { id } = req.params;
+      Products.getAllProducts(id)
+        .then((prod) => {
+          if (prod.length === 0) {
+            return res
+              .status(404)
+              .json({ message: "This user does not have any listings" });
+          } else {
+            Products.updateProduct(changes, id)
+              .then((prod) => {
+                res.status(201).json({ message: "update success", prod });
+              })
+              .catch((err) => {
+                res.status(500).json({
+                  message: `something went wrong, ${err}, ${err.message}`,
+                });
+              });
+          }
+        })
+        .catch((err) => {
+          res
+            .status(500)
+            .json({ message: `something went wrong, ${err}, ${err.message}` });
+        });
+    }
+  );
 
-
+// GETS ALL PRODUCTS THAT AREN'T BORROWED
+router.get("/find/available", (req, res) => {
+  Products.getAllProducts()
+    .then(resp => {
+      const avail = resp.filter(prod => {
+        return prod.borrowerName == null;
+      });
+      res.status(200).json(avail);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ message: `something went wrong, ${err}, ${err.message}` });
+    });
+});
 
 //GET PRODUCTS BY AN OWNER -- NEEDS RESTRICTED MIDDLEWARE TO PUT REQUEST
 router.route("/by-owner/:id").get((req, res) => {
@@ -98,38 +126,6 @@ router.route("/by-owner/:id").get((req, res) => {
         .json({ message: `something went wrong, ${err}, ${err.message}` });
     });
 });
-
-//UPDATE METHOD FOR LISTERS TO UPDATE THEIR LISTINGS
-router.put(
-  "/:id/update",
-  /*insert restricted middleware here*/ (req, res) => {
-    const changes = req.body;
-    const { id } = req.params;
-    Products.getAllProducts(id)
-      .then((prod) => {
-        if (prod.length === 0) {
-          return res
-            .status(404)
-            .json({ message: "This user does not have any listings" });
-        } else {
-          Products.updateProduct(changes, id)
-            .then((prod) => {
-              res.status(201).json({ message: "update success", prod });
-            })
-            .catch((err) => {
-              res.status(500).json({
-                message: `something went wrong, ${err}, ${err.message}`,
-              });
-            });
-        }
-      })
-      .catch((err) => {
-        res
-          .status(500)
-          .json({ message: `something went wrong, ${err}, ${err.message}` });
-      });
-  }
-);
 
 //GETS ALL THE PRODUCTS YOU ARE CURRENTLY BORROWING --- NEEDS A MIDDLEWARE TO RESTRICT IT SO ONLY BORROWER CAN SEE THIS
 router.get(
@@ -152,13 +148,13 @@ router.get(
 
 router.put("/:id/borrow-item", (req, res) => {
   const id = req.params.id;
-  const borrowerID = req.body.userID;
+  const changes = req.body;
   Products.getAllProducts(id)
     .then((prod) => {
       if (prod.length === 0) {
         return res.status(404).json({ message: "this item does not exist" });
       } else {
-        Products.addBorrowed(id, borrowerID)
+        Products.addBorrowed(id, changes)
           .then((bor) => {
             res.status(201).json({ message: "You borrowed the item!", bor });
           })
@@ -177,7 +173,7 @@ router.put("/:id/borrow-item", (req, res) => {
 });
 
 //UPDATES ITEM TO BEING AVAILABLE WHEN USER RETURNS THE ITEM
-router.put(
+router.delete(
   "/:id/return-item",
   /*insert middleware */ (req, res) => {
     const { id } = req.params;
@@ -188,7 +184,7 @@ router.put(
         } else {
           Products.returnBorrowed(id)
             .then((prod) => {
-              res.status(200).json(prod);
+              res.status(200).json({message: "you have returned the item", prod});
             })
             .catch((err) => {
               res.status(500).json({
