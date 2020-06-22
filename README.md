@@ -7,35 +7,31 @@
 | email    | string  | _required_ and _unique_            |
 | password | string  | _required_                         |
 | username | string  | _required_                         |
-| role     | string  | _required_                         |
-#### Owner
+| role     | integer  | _required_                         |
+#### Role
 | Field    | Type    | Notes                              |
 | -------- | ------- | ---------------------------------- |
 | id       | integer | _foreign key_ and _autoincrements_ |
-| user-id  | string  | _required_ and _unique_            |
-#### Renter
-| Field    | Type    | Notes                              |
-| -------- | ------- | ---------------------------------- |
-| id       | integer | _foreign key_ and _autoincrements_ |
-| user-id  | string  | _required_ and _unique_            |
+| name     | string  | _required_ and _unique_            |
 #### Product
 | Field     | Type    | Notes                                                                      |
 | --------- | ------- | -----------------------------------------------------------------------    |
 | id        | integer | _primary key_ and _autoincrements_                                         |
 | name      | string  | _required_; name of the item                                               |
 | image_URL | string  | product image                                                              |
-| quote     | text    | price quote                                                                |
+| price     | text    | price quote                                                                |
 | content   | text    | _required_; review of the tech stuff                                       |
-| author    | text    | author of the review                                                       |
-| liked     | boolean | whether or not the tech stuff has been liked; defaults to _false_ on POST  |
+| owner     | integer | _foreign key_ ID of the author of the listing                                                       |
+| available     | boolean | whether or not the tech stuff is rented; defaults to _false_ on POST  |
+| borrower     | integer | _foreign key_ user borrowing the item; defaults to _null_ on POST                                                       |
 ## API
-BASE URL: https://bw-use-my-tech-stuff.herokuapp.com/
+BASE URL: https://usemy-techstuff.herokuapp.com/
 test account:
 ```json
 {
-  "email": "tester@email.com",
-  "username": "test123",
-  "password": "test"
+  "username": "poweruser",
+  "password": "qwerty",
+  "email": "poweruser@email.com"
 }
 ```
 #### Table of Contents
@@ -48,11 +44,11 @@ test account:
 | PUT    | `/api/user/:user_id`        | update user info; requires authorization                                                              | [link](#put-apiusersuser_id)       |
 | DELETE | `/api/user/:user_id`        | delete a user account; requires authorization                                                         | [link](#delete-apiusersuser_id)    |
 | &nbsp; |                             |                                                                                                       |                                    |
-| GET    | `/api/products`             | get products                                                                                          | [link](#get-apiproducts)            |
-| POST   | `/api/products`             | create a new product post; requires `name` and `content`                                              | [link](#post-apiproducts)           |
-| GET    | `/api/products/:product_id` | get a product                                                                                         | [link](#get-apireviewsreview_id)    |
-| PUT    | `/api/products/:product_id` | update a product; change `liked` key to like or unlike a submitted product; requires authorization;   | [link](#put-apiproductsproduct_id)    |
-| DELETE | `/api/products/:product_id`  | delete a product; requires authorization;                                                            | [link](#delete-apiproductsproduct_id) |
+| GET    | `/api/product`             | get products                                                                                          | [link](#get-apiproducts)            |
+| POST   | `/api/product`             | create a new product post; requires `name` and `content`                                              | [link](#post-apiproducts)           |
+| GET    | `/api/product/:id` | get a product                                                                                         | [link](#get-apireviewsreview_id)    |
+| PUT    | `/api/products/:id/update` | update a product;  requires authorization;   | [link](#put-apiproductsproduct_id)    |
+| DELETE | `/api/products/:id`  | delete a product; requires authorization;                                                            | [link](#delete-apiproductsproduct_id) |
 ## Examples
 #### POST /api/auth/register
 request data:
