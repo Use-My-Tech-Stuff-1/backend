@@ -26,7 +26,7 @@ exports.up = function (knex) {
       tbl.integer("p_id")
     })
     .createTable("products", (tbl) => {
-      tbl.increments("prod_id")
+      tbl.increments()
       tbl.string("name", 256).notNullable();
       tbl.string("image_URL", 256).notNullable();
       tbl.text("price").notNullable();
