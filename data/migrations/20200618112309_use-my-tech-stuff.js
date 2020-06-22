@@ -26,7 +26,7 @@ exports.up = function (knex) {
       tbl.integer("p_id")
     })
     .createTable("products", (tbl) => {
-      tbl.increments("prod_id").references("borrowers.p_id").onDelete("cascade");
+      tbl.increments("prod_id")
       tbl.string("name", 256).notNullable();
       tbl.string("image_URL", 256).notNullable();
       tbl.text("price").notNullable();
