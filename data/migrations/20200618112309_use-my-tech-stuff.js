@@ -1,6 +1,9 @@
 exports.up = function (knex) {
   return knex.schema
-
+    .createTable("roles", (tbl) => {
+      tbl.increments();
+      tbl.string("name", 128).notNullable().unique();
+    })
     .createTable("users", (tbl) => {
       tbl.increments();
       tbl.string("username", 128).notNullable().unique().index();
@@ -14,10 +17,7 @@ exports.up = function (knex) {
         .onDelete("RESTRICT")
         .onUpdate("CASCADE");
     })
-    .createTable("roles", (tbl) => {
-      tbl.increments();
-      tbl.string("name", 128).notNullable().unique();
-    })
+
     .createTable("products", (tbl) => {
       tbl.increments();
       tbl.string("name", 256).notNullable();
@@ -46,9 +46,9 @@ exports.up = function (knex) {
 exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists("products")
-
-    .dropTableIfExists("roles")
-    .dropTableIfExists("users");
+    .dropTableIfExists("users")
+    .dropTableIfExists("roles");
+    
 };
 
 // .createTable("lending", (tbl) => {
