@@ -17,7 +17,7 @@ function getAllProducts(id) {
       db
         .from("products as p")
         .select(
-          "p.id",
+          "p.prod_id",
           "p.name",
           "p.image_URL",
           "p.price",
@@ -27,18 +27,18 @@ function getAllProducts(id) {
           "us.username as borrowerName",
           "us.id as borrower_ID"
         )
-        // .join("owners as o", "o.product_id", "p.id")
+        // .join("owners as o", "o.product_id", "p.prod_id")
         .leftJoin("users as u", "u.id", "p.owner")
-        .leftJoin("borrowers as b", "b.p_id", "p.id")
+        .leftJoin("borrowers as b", "b.p_id", "p.prod_id")
         .leftJoin("users as us", "us.id", "b.borrower_id")
-        .where({ id })
+        .where({ prod_id: id })
     );
   } else {
     return (
       db
         .from("products as p")
         .select(
-          "p.id",
+          "p.prod_id",
           "p.name",
           "p.image_URL",
           "p.price",
@@ -48,9 +48,9 @@ function getAllProducts(id) {
           "us.username as borrowerName",
           "us.id as borrower_ID"
         )
-        // .join("owners as o", "o.product_id", "p.id")
+        // .join("owners as o", "o.product_id", "p.prod_id")
         .leftJoin("users as u", "u.id", "p.owner")
-        .leftJoin("borrowers as b", "b.p_id", "p.id")
+        .leftJoin("borrowers as b", "b.p_id", "p.prod_id")
         .leftJoin("users as us", "us.id", "b.borrower_id")
     );
   }
@@ -60,7 +60,7 @@ function getProductsByOwner(id) {
   return db("products as p")
     .join("users as u", "u.id", "p.owner")
     .select(
-      "p.id",
+      "p.prod_id",
       "p.name",
       "p.image_URL",
       "p.price",
@@ -70,18 +70,18 @@ function getProductsByOwner(id) {
       "us.username as borrowerName",
       "us.id as borrower_ID"
     )
-    .leftJoin("borrowers as b", "b.p_id", "p.id")
+    .leftJoin("borrowers as b", "b.p_id", "p.prod_id")
     .leftJoin("users as us", "us.id", "b.borrower_id")
     .where({ owner: id });
 }
 
 function getMyBorrowing(id) {
   return db("borrowers as b")
-    .join("products as p", "p.id", "b.p_id")
+    .join("products as p", "p.prod_id", "b.p_id")
     .leftJoin("users as u", "u.id", "p.owner")
     .leftJoin("users as us", "us.id", "b.borrower_id")
     .select(
-      "p.id",
+      "p.prod_id",
       "p.name",
       "p.image_URL",
       "p.price",
@@ -95,15 +95,15 @@ function getMyBorrowing(id) {
 }
 
 function addProduct(product) {
-  return db.insert(product).into("products");
+  return db.insert(product, "id").into("products");
 }
 
 function updateProduct(changes, id) {
-  return db("products").where({ id }).update(changes);
+  return db("products").where({ prod_id: id }).update(changes);
 }
 
 function deleteProduct(id) {
-  return db("products").where({ id }).del();
+  return db("products").where({ prod_id: id }).del();
 }
 
 function addBorrowed(id, changes) {
