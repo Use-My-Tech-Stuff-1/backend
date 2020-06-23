@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const Products = require("../data/models/listingModels");
+const idRestrict = require("../auth/check-is-product-owner");
 
 //GETS ALL PRODUCTS
 router
@@ -62,25 +63,30 @@ router
 
   //UPDATE METHOD FOR LISTERS TO UPDATE THEIR LISTINGS
   .put(
-    /*insert restricted middleware here*/ (req, res) => {
+     (req, res) => {
       const changes = req.body;
       const { id } = req.params;
+      const ownerID = req.token.userID;
+
       Products.getAllProducts(id)
         .then((prod) => {
+          console.log(prod, prod[0].owner, ownerID)
           if (prod.length === 0) {
             return res
               .status(404)
               .json({ message: "This user does not have any listings" });
-          } else {
+          } else if (prod[0].owner === ownerID)  {
             Products.updateProduct(changes, id)
               .then((prod) => {
                 res.status(201).json({ message: "update success", prod });
-              })
+              }) 
               .catch((err) => {
                 res.status(500).json({
                   message: `something went wrong, ${err}, ${err.message}`,
                 });
               });
+          } else {
+            res.status(404).json({message: "denied"})
           }
         })
         .catch((err) => {
@@ -107,7 +113,7 @@ router.get("/find/available", (req, res) => {
     });
 });
 
-//GET PRODUCTS BY AN OWNER -- NEEDS RESTRICTED MIDDLEWARE TO PUT REQUEST
+//GET PRODUCTS BY AN OWNER
 router.route("/by-owner/:id").get((req, res) => {
   const { id } = req.params;
   Products.getProductsByOwner(id)
@@ -116,7 +122,7 @@ router.route("/by-owner/:id").get((req, res) => {
         return res
           .status(404)
           .json({ message: "This user does not have any listings" });
-      } else {
+      } else  {
         return res.status(200).json(prod);
       }
     })
@@ -155,6 +161,7 @@ router.put("/:id/borrow-item", (req, res) => {
         return res.status(404).json({ message: "this item does not exist" });
       } else {
         Products.addBorrowed(id, changes)
+        
           .then((bor) => {
             res.status(201).json({ message: "You borrowed the item!", bor });
           })
@@ -177,11 +184,12 @@ router.delete(
   "/:id/return-item",
   /*insert middleware */ (req, res) => {
     const { id } = req.params;
+    const borrowerID = req.token.userID;
     Products.getAllProducts(id)
       .then((prod) => {
         if (prod.length === 0) {
           return res.status(404).json({ message: "this item does not exist" });
-        } else {
+        } else if(prod[0].borrower_ID === borrowerID) {
           Products.returnBorrowed(id)
             .then((prod) => {
               res.status(200).json({message: "you have returned the item", prod});
@@ -191,6 +199,8 @@ router.delete(
                 message: `something went wrong, ${err}, ${err.message}`,
               });
             });
+        } else {
+          res.status(400).json({message: "only the borrower can return the item"})
         }
       })
       .catch((err) => {

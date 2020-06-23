@@ -40,6 +40,7 @@ router.post("/login", (req, res) => {
         // compare the password the hash stored in the database
         if (users && bcryptjs.compareSync(password, users.password)) {
           const token = generateToken(users);
+
           res.status(200).json({ message: `Welcome to our API, ${users.username}`,
           token
         });
@@ -61,7 +62,8 @@ function generateToken(users) {
   const payload = {
     userID: users.id,
     username: users.username,
-    email: users.email
+    email: users.email,
+    role: users.role
   }
   const options = {
     expiresIn: "4hr"
