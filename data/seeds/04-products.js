@@ -9,9 +9,7 @@ exports.seed = function (knex) {
           image_URL: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/IPhone_5s_golden.svg/800px-IPhone_5s_golden.svg.png",
           price: "$5/month",
           content: "Working condition gold iPhone 5s, 64GB storage, unlocked, minor scratches",
-          // available: false,
           owner: 1,
-          // borrower: 4
         },
         {
           name: "iPhone 6s",

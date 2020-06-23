@@ -23,11 +23,10 @@ function getAllProducts(id) {
           "p.price",
           "p.content",
           "u.username as ownerName",
-          "u.id as owner_ID",
+          "p.owner",
           "us.username as borrowerName",
           "us.id as borrower_ID"
         )
-        // .join("owners as o", "o.product_id", "p.prod_id")
         .leftJoin("users as u", "u.id", "p.owner")
         .leftJoin("borrowers as b", "b.p_id", "p.prod_id")
         .leftJoin("users as us", "us.id", "b.borrower_id")
@@ -44,11 +43,10 @@ function getAllProducts(id) {
           "p.price",
           "p.content",
           "u.username as ownerName",
-          "u.id as owner_ID",
+          "p.owner",
           "us.username as borrowerName",
           "us.id as borrower_ID"
         )
-        // .join("owners as o", "o.product_id", "p.prod_id")
         .leftJoin("users as u", "u.id", "p.owner")
         .leftJoin("borrowers as b", "b.p_id", "p.prod_id")
         .leftJoin("users as us", "us.id", "b.borrower_id")
@@ -66,13 +64,13 @@ function getProductsByOwner(id) {
       "p.price",
       "p.content",
       "u.username as ownerName",
-      "u.id as owner_ID",
+      "p.owner",
       "us.username as borrowerName",
       "us.id as borrower_ID"
     )
     .leftJoin("borrowers as b", "b.p_id", "p.prod_id")
     .leftJoin("users as us", "us.id", "b.borrower_id")
-    .where({ owner: id });
+    .where({ owner: id }).first();
 }
 
 function getMyBorrowing(id) {
@@ -87,7 +85,7 @@ function getMyBorrowing(id) {
       "p.price",
       "p.content",
       "u.username as ownerName",
-      "u.id as owner_ID",
+      "p.owner",
       "us.username as borrowerName",
       "us.id as borrower_ID"
     )
