@@ -33,9 +33,9 @@ BASE URL: https://usemy-techstuff.herokuapp.com/
 test account:
 ```json
 {
-  "username": "poweruser",
+  "username": "testing",
   "password": "qwerty",
-  "email": "poweruser@email.com"
+  "email": "someemail@somehting.com"
 }
 ```
 #### Table of Contents
@@ -49,8 +49,7 @@ test account:
 | PUT    | `/api/users/:user_id/username`        | update user username; requires authorization                                                              | [link](#put-apiusersuser_idusername)       |
 | PUT    | `/api/users/:user_id/email`        | update user email; requires authorization                                                              | [link](#put-apiusersuser_idemail)       |
 | PUT    | `/api/users/:user_id/password`        | update user password; requires authorization                                                              | [link](#put-apiusersuser_idpassword)       |
-|
-| &nbsp; |                                                                                               
+| &nbsp; |                                                                                              
 | GET    | `/api/product`             | get products                                                                                          | [link](#get-apiproduct)            |
 | GET    | `/api/product/:id` | get a product                                                                                         | [link](#get-apiproduct)    |
 | GET    | `/api/product/find/available`             | get products that are not borrowed by anyone                                                                                         | [link](#get-apiproductfindavailable)            |
