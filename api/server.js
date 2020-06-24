@@ -5,7 +5,8 @@ const helmet = require('helmet');
 // const configRoutes = require('../config/routes.js')
 const authenticate = require('../auth/auth-middlware.js')
 const authRouter = require('../auth/auth-router.js');
-const prodRouter = require('../products/products-router.js')
+const prodRouter = require('../products/products-router.js');
+const userRouter = require('../users/users-router.js')
 const server = express();
 
 server.use(helmet());
@@ -14,7 +15,8 @@ server.use(express.json());
 
 //configRoutes(server)
 server.use('/api/auth', authRouter);
-server.use('/api/product', authenticate, prodRouter)
+server.use('/api/product', authenticate, prodRouter);
+server.use('/api/users', authenticate, userRouter);
 server.get('/', (req, res) => {
     res(200).send('Server Running');
 })

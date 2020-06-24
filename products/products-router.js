@@ -1,7 +1,6 @@
 const router = require("express").Router();
 
 const Products = require("../data/models/listingModels");
-const idRestrict = require("../auth/check-is-product-owner");
 
 //GETS ALL PRODUCTS
 router
@@ -70,12 +69,11 @@ router
 
       Products.getAllProducts(id)
         .then((prod) => {
-          console.log(prod, prod[0].owner, ownerID)
           if (prod.length === 0) {
             return res
               .status(404)
               .json({ message: "This user does not have any listings" });
-          } else if (prod[0].owner === ownerID)  {
+          } else if (prod[0].owner === ownerID)  { //restricts access so only the owner can update the product
             Products.updateProduct(changes, id)
               .then((prod) => {
                 res.status(201).json({ message: "update success", prod });
@@ -154,7 +152,10 @@ router.get(
 
 router.put("/:id/borrow-item", (req, res) => {
   const id = req.params.id;
-  const changes = req.body;
+  const changes = {
+    borrower_id: req.token.userID,
+    p_id: req.params.id
+  }
   Products.getAllProducts(id)
     .then((prod) => {
       if (prod.length === 0) {
@@ -181,15 +182,14 @@ router.put("/:id/borrow-item", (req, res) => {
 
 //UPDATES ITEM TO BEING AVAILABLE WHEN USER RETURNS THE ITEM
 router.delete(
-  "/:id/return-item",
-  /*insert middleware */ (req, res) => {
+  "/:id/return-item", (req, res) => {
     const { id } = req.params;
     const borrowerID = req.token.userID;
     Products.getAllProducts(id)
       .then((prod) => {
         if (prod.length === 0) {
           return res.status(404).json({ message: "this item does not exist" });
-        } else if(prod[0].borrower_ID === borrowerID) {
+        } else if(prod[0].borrower_ID === borrowerID) { //restricts access so only the borrower can return the item
           Products.returnBorrowed(id)
             .then((prod) => {
               res.status(200).json({message: "you have returned the item", prod});
