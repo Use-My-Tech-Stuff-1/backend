@@ -150,7 +150,7 @@ router.get(
 
 //UPDATES THE ITEM TO BEING UNAVAILABLE AND ASSIGNS BORROWER WHEN BORROWING ITEM
 
-router.put("/:id/borrow-item", (req, res) => {
+router.post("/:id/borrow-item", (req, res) => {
   const id = req.params.id;
   const changes = {
     borrower_id: req.token.userID,
