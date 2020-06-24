@@ -27,7 +27,7 @@
 | price     | text    | price                                                                 |
 | content   | text    | _required_; review of the tech stuff                                       |
 | owner     | integer | _foreign key_ ID of the author of the listing                                                       |
-POST                                                       |
+                                                       
 ## API
 BASE URL: https://usemy-techstuff.herokuapp.com/
 test account:
