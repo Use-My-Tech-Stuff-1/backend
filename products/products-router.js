@@ -21,7 +21,7 @@ router
   .post((req, res) => {
     Products.addProduct(req.body)
       .then((prod) => {
-        res.status(201).json({ message: "successfully added listing", prod });
+        res.status(201).json({ message: "successfully added listing", product: req.body, prod });
       })
       .catch((err) => {
         res
