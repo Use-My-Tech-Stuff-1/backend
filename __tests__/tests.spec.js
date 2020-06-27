@@ -1,10 +1,9 @@
 const request = require("supertest");
 const server = require("../api/server.js");
 const db = require("../data/dbConfig.js");
-// const { describe } = require("yargs");
 
 let token;
-
+let userID;
 
 
 beforeEach(async () => {
@@ -18,9 +17,11 @@ beforeEach(async () => {
     .post("/api/auth/login")
     .send({ username: "testbot", password: "qwerty" });
   token = res.body.token;
+
 });
 
-describe("server.js", () => {
+
+describe("users-router.js", () => {
   describe("POST /register", () => {
     it("should return 201", async () => {
       const res = await request(server)
@@ -137,7 +138,7 @@ describe("product-routes.js", () => {
     });
   });
     describe("/GET", () => {
-    it("should return all projects", async () => {
+    it("should return all projects, value text should match the POST, should return the two posted objects", async () => {
         const postProduct = await request(server)
         .post("/api/product")
         .set("Authorization", token)
