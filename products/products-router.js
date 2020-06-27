@@ -69,11 +69,12 @@ router
 
       Products.getAllProducts(id)
         .then((prod) => {
+          console.log(prod)
           if (prod.length === 0) {
             return res
               .status(404)
               .json({ message: "This user does not have any listings" });
-          } else if (prod[0].owner === ownerID)  { //restricts access so only the owner can update the product
+          } else if (prod.owner === ownerID)  { 
             Products.updateProduct(changes, id)
               .then((prod) => {
                 res.status(201).json({ message: "update success", prod });
@@ -88,6 +89,7 @@ router
           }
         })
         .catch((err) => {
+          console.log(err)
           res
             .status(500)
             .json({ message: `something went wrong, ${err}, ${err.message}` });
@@ -189,7 +191,7 @@ router.delete(
       .then((prod) => {
         if (prod.length === 0) {
           return res.status(404).json({ message: "this item does not exist" });
-        } else if(prod[0].borrower_ID === borrowerID) { //restricts access so only the borrower can return the item
+        } else if(prod.borrower_ID === borrowerID) { //restricts access so only the borrower can return the item
           Products.returnBorrowed(id)
             .then((prod) => {
               res.status(200).json({message: "you have returned the item", prod});
