@@ -191,7 +191,7 @@ router.delete(
       .then((prod) => {
         if (prod.length === 0) {
           return res.status(404).json({ message: "this item does not exist" });
-        } else if(prod[0].borrower_ID === borrowerID) { //restricts access so only the borrower can return the item
+        } else if(prod.borrower_ID === borrowerID) { //restricts access so only the borrower can return the item
           Products.returnBorrowed(id)
             .then((prod) => {
               res.status(200).json({message: "you have returned the item", prod});
